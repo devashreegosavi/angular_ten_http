@@ -9,7 +9,8 @@ import { Post } from './post.model';
 })
 export class AppComponent {
   title = 'angular_ten_http';
-  loadedPosts = [];
+  loadedPosts : Post[] = [];
+  isFetching = false;
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
@@ -38,6 +39,7 @@ export class AppComponent {
   }
 
   private fetchPosts(){
+    this.isFetching=true;
     this.http
       .get<{ [key:string] : Post}>('https://ng-complete-guide-4d174-default-rtdb.firebaseio.com/posts.json')
       .pipe(
@@ -52,8 +54,9 @@ export class AppComponent {
         })
       )
       .subscribe(posts => {
-        // ...
-        console.log(posts);
+        this.isFetching=false;
+        //console.log(posts);
+        this.loadedPosts = posts;
       });
   }
 }
